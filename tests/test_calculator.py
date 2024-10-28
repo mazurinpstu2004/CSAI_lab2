@@ -1,13 +1,33 @@
 import lib
 import pytest
 
-class TestBubbleSort:
+class TestCalculator:
 
-    # Позитивный тест с корректными данными. Возвращает отсортированный массив
-    def test_positive_bubble_sort(self):
-        assert lib.bubble_sort([1, 9, 5, 3]) == [1, 3, 5, 9]
+    # Функция возвращает данные для выполнения теста - корректное вычисление
+    @pytest.fixture
+    def correct_example(self):
+        return 2, 4, '*'
 
-    # Негативный тест с пустым массивом. Вызывается исключение ValueErrorм
-    def test_negative_bubble_sort(self):
+    # Функция возвращает данные для выполнения теста - неправильный оператор
+    @pytest.fixture
+    def bad_operator_example(self):
+        return 8, 4, ';'
+
+    # Функция возвращает данные для выполнения теста - деление на ноль
+    @pytest.fixture
+    def divide_by_zero_example(self):
+        return 12, 0, '/'
+
+    # Позитивный тест с корректными данными. Возвращает результат вычисления
+    def test_positive_calc(self, correct_example):
+        assert lib.calculator(*correct_example) == 8
+
+    # Негативный тест с неподходящим оператором. Вызывается исключение ValueError
+    def test_bad_operator_calc(self, bad_operator_example):
         with pytest.raises(ValueError):
-            lib.bubble_sort([])
+            lib.calculator(*bad_operator_example)
+
+    # Негативный тест с делением на ноль. Вызывается исключение ZeroDivisionError
+    def test_zero_divide_calc(self, divide_by_zero_example):
+        with pytest.raises(ZeroDivisionError):
+            lib.calculator(*divide_by_zero_example)
